@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 JobSphere — Full-Stack Job Portal
+
+JobSphere is a modern job portal platform inspired by Naukri and Indeed, built with Next.js 14, TypeScript, Tailwind CSS, and PostgreSQL with Prisma ORM.
+
+## Features
+
+- **Job Seekers**: Browse jobs, create profiles, track applications, save jobs, salary insights
+- **Employers**: Post jobs, manage applications, search resumes, company pages
+- **Admin**: User management, job moderation, analytics, content management
+- **Authentication**: NextAuth.js with email/password, Google, and LinkedIn OAuth
+- **Real-time**: Notifications and messaging
+- **Payments**: Subscription plans with Razorpay/Stripe
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js 14 (App Router), TypeScript, Tailwind CSS |
+| State Management | Zustand |
+| Backend | Next.js API Routes |
+| Database | PostgreSQL with Prisma ORM |
+| Authentication | NextAuth.js |
+| File Storage | Azure Blob Storage |
+| Search | Elasticsearch/Algolia (planned) |
+| Real-time | Socket.io (planned) |
+| Email | Nodemailer + SendGrid/Resend |
+| Payments | Razorpay/Stripe |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ and npm
+- PostgreSQL database
+- Environment variables configured (see `.env.example`)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd jobsphere
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+Edit `.env.local` with your database credentials and API keys.
+
+4. Set up the database:
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+```
+
+5. (Optional) Seed the database:
+```bash
+npx prisma db seed
+```
+
+### Development
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+jobsphere/
+├── app/                    # Next.js App Router
+│   ├── (auth)/            # Authentication pages
+│   ├── (seeker)/          # Job seeker pages
+│   ├── (employer)/        # Employer pages
+│   ├── (admin)/           # Admin panel
+│   ├── jobs/              # Public job pages
+│   ├── companies/         # Company pages
+│   ├── salary/            # Salary insights
+│   ├── blog/              # Blog/Career advice
+│   └── api/               # API routes
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   ├── layout/           # Layout components
+│   ├── forms/            # Form components
+│   ├── jobs/             # Job-related components
+│   └── ...
+├── lib/                  # Utility functions
+│   ├── prisma.ts        # Prisma client
+│   ├── utils.ts         # Helper functions
+│   ├── constants.ts     # Constants
+│   └── validations/     # Zod schemas
+├── hooks/                # Custom React hooks
+├── store/                # Zustand stores
+├── services/             # API service functions
+├── types/                # TypeScript types
+├── prisma/               # Prisma schema and migrations
+│   ├── schema.prisma
+│   └── migrations/
+├── public/               # Static assets
+├── styles/               # Global styles
+└── config/               # App configuration
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database Schema
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application uses a normalized PostgreSQL database with the following main entities:
 
-## Deploy on Vercel
+- **Users & Auth**: User, Account, Session, VerificationToken
+- **Job Seeker Profile**: JobSeekerProfile, Skill, Resume, Education, WorkExperience, Certification, Project
+- **Company & Recruiter**: Company, RecruiterProfile, CompanyLocation
+- **Jobs**: Job, JobCategory, JobTag, JobSkill
+- **Applications**: Application, ApplicationStatusHistory
+- **Interactions**: SavedJob, SavedCandidate, JobAlert, Notification, Review
+- **Messaging**: Conversation, ConversationParticipant, Message
+- **Admin**: ReportedContent, AuditLog, Subscription
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Routes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+API routes are organized under `/app/api/`:
+
+- `/api/auth/*` - NextAuth.js authentication
+- `/api/jobs/*` - Job CRUD operations
+- `/api/applications/*` - Application management
+- `/api/users/*` - User management
+- `/api/companies/*` - Company management
+- `/api/messages/*` - Messaging
+- `/api/notifications/*` - Notifications
+- `/api/payments/*` - Payment processing
+- `/api/admin/*` - Admin operations
+
+## Contributing
+
+This is a demonstration project. Contributions are welcome for learning and improvement purposes.
+
+## License
+
+This project is for educational and portfolio purposes.
+
+---
+
+**JobSphere** — Your Career, Your Sphere 🌐

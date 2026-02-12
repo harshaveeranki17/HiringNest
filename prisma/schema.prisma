@@ -1,0 +1,485 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  JOB_SEEKER
+  EMPLOYER
+  ADMIN
+}
+
+enum AuthProvider {
+  GOOGLE
+  LINKEDIN
+  EMAIL
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum WorkMode {
+  REMOTE
+  ONSITE
+  HYBRID
+}
+
+enum JobStatus {
+  ACTIVE
+  PAUSED
+  CLOSED
+  DRAFT
+}
+
+enum ApplicationStatus {
+  APPLIED
+  VIEWED
+  SHORTLISTED
+  INTERVIEW
+  OFFERED
+  REJECTED
+  WITHDRAWN
+}
+
+enum JobAlertFrequency {
+  DAILY
+  WEEKLY
+}
+
+enum SubscriptionPlan {
+  FREE
+  BASIC
+  PREMIUM
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  EXPIRED
+}
+
+model User {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  password          String?
+  role              UserRole          @default(JOB_SEEKER)
+  provider          AuthProvider      @default(EMAIL)
+  emailVerified     DateTime?
+  phone             String?
+  avatar            String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  accounts          Account[]
+  sessions          Session[]
+  jobSeekerProfile  JobSeekerProfile?
+  recruiterProfile  RecruiterProfile?
+  applications      Application[]
+  notifications     Notification[]
+  messages          Message[]
+  reviews           Review[]
+  auditLogs         AuditLog[]
+  subscriptions     Subscription[]
+  reportedContents  ReportedContent[]
+  conversations     ConversationParticipant[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model JobSeekerProfile {
+  userId             String   @id
+  fullName           String
+  headline           String?
+  summary            String?
+  currentLocation    Json?
+  preferredLocations String[]
+  experienceYears    Int?
+  currentSalary      Int?
+  expectedSalary     Int?
+  noticePeriod       String?
+  skills             String[]
+  profileCompleteness Int?    @default(0)
+  resumeUrl          String?
+  photoUrl           String?
+  dateOfBirth        DateTime?
+  gender             String?
+  socialLinks        Json?
+  isActivelyLooking  Boolean  @default(true)
+  profileViews       Int      @default(0)
+  lastActive         DateTime?
+
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  education          Education[]
+  workExperience     WorkExperience[]
+  certifications     Certification[]
+  projects           Project[]
+  savedJobs          SavedJob[]
+  savedByRecruiters  SavedCandidate[]    @relation("SavedCandidateSeeker")
+  jobAlerts          JobAlert[]
+}
+
+model Education {
+  id          String  @id @default(cuid())
+  profileId   String
+  degree      String
+  field       String?
+  institution String
+  startYear   Int?
+  endYear     Int?
+  grade       String?
+  isPrimary   Boolean @default(false)
+
+  profile JobSeekerProfile @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+}
+
+model WorkExperience {
+  id          String  @id @default(cuid())
+  profileId   String
+  jobTitle    String
+  company     String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean @default(false)
+  description String?
+  skills      String[]
+
+  profile JobSeekerProfile @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+}
+
+model Certification {
+  id            String  @id @default(cuid())
+  profileId     String
+  name          String
+  issuingOrg    String?
+  issueDate     DateTime?
+  expiryDate    DateTime?
+  credentialUrl String?
+
+  profile JobSeekerProfile @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  profileId   String
+  title       String
+  description String?
+  url         String?
+  skills      String[]
+  startDate   DateTime?
+  endDate     DateTime?
+
+  profile JobSeekerProfile @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+}
+
+model Company {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  logo         String?
+  banner       String?
+  website      String?
+  industry     String?
+  companySize  String?
+  foundedYear  Int?
+  description  String?
+  headquarters String?
+  locations    String[]
+  socialLinks  Json?
+  isVerified   Boolean @default(false)
+  rating       Float?
+  reviewCount  Int     @default(0)
+
+  recruiters   RecruiterProfile[]
+  jobs         Job[]
+  reviews      Review[]
+  subscriptions Subscription[]
+}
+
+model RecruiterProfile {
+  userId     String  @id
+  companyId  String
+  designation String?
+  department String?
+  phone      String?
+  isAdmin    Boolean @default(false)
+
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  postedJobs Job[]
+  savedCandidates SavedCandidate[]
+}
+
+model Job {
+  id                String   @id @default(cuid())
+  companyId         String
+  recruiterId       String
+  title             String
+  slug              String   @unique
+  description       String
+  requirements      String[]
+  responsibilities  String[]
+  skills            String[]
+  jobType           JobType
+  workMode          WorkMode
+  experienceMin     Int?
+  experienceMax     Int?
+  salaryMin         Int?
+  salaryMax         Int?
+  salaryHidden      Boolean  @default(false)
+  currency          String?  @default("INR")
+  location          String?
+  vacancies         Int?     @default(1)
+  applicationDeadline DateTime?
+  status            JobStatus @default(DRAFT)
+  views             Int      @default(0)
+  applicationsCount Int      @default(0)
+  postedAt          DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  isFeatured        Boolean  @default(false)
+  isUrgent          Boolean  @default(false)
+  categoryId        String?
+
+  company    Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  recruiter  RecruiterProfile @relation(fields: [recruiterId], references: [userId], onDelete: Cascade)
+  category   JobCategory?     @relation(fields: [categoryId], references: [id])
+  tags       JobTagOnJob[]
+  applications Application[]
+  savedBy     SavedJob[]
+}
+
+model JobCategory {
+  id       String  @id @default(cuid())
+  name     String
+  slug     String  @unique
+  parentId String?
+  icon     String?
+
+  parent   JobCategory? @relation("JobCategoryTree", fields: [parentId], references: [id])
+  children JobCategory[] @relation("JobCategoryTree")
+  jobs     Job[]
+}
+
+model JobTag {
+  id    String @id @default(cuid())
+  name  String
+  slug  String @unique
+
+  jobs  JobTagOnJob[]
+}
+
+model JobTagOnJob {
+  jobId String
+  tagId String
+
+  job Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  tag JobTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([jobId, tagId])
+}
+
+model Application {
+  id            String             @id @default(cuid())
+  jobId         String
+  seekerId      String
+  resumeUrl     String?
+  coverLetter   String?
+  status        ApplicationStatus  @default(APPLIED)
+  appliedAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  recruiterNotes String?
+
+  job           Job                @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  seeker        User               @relation(fields: [seekerId], references: [id], onDelete: Cascade)
+  history       ApplicationStatusHistory[]
+}
+
+model ApplicationStatusHistory {
+  id             String            @id @default(cuid())
+  applicationId  String
+  fromStatus     ApplicationStatus
+  toStatus       ApplicationStatus
+  changedBy      String?
+  changedAt      DateTime          @default(now())
+  note           String?
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model SavedJob {
+  seekerId String
+  jobId    String
+  savedAt  DateTime @default(now())
+
+  seeker JobSeekerProfile @relation(fields: [seekerId], references: [userId], onDelete: Cascade)
+  job    Job              @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@id([seekerId, jobId])
+}
+
+model SavedCandidate {
+  recruiterId String
+  seekerId    String
+  savedAt     DateTime @default(now())
+  notes       String?
+
+  recruiter RecruiterProfile @relation(fields: [recruiterId], references: [userId], onDelete: Cascade)
+  seeker    JobSeekerProfile @relation("SavedCandidateSeeker", fields: [seekerId], references: [userId], onDelete: Cascade)
+
+  @@id([recruiterId, seekerId])
+}
+
+model JobAlert {
+  id        String             @id @default(cuid())
+  seekerId  String
+  keywords  String?
+  location  String?
+  jobType   JobType?
+  frequency JobAlertFrequency  @default(DAILY)
+  isActive  Boolean            @default(true)
+
+  seeker JobSeekerProfile @relation(fields: [seekerId], references: [userId], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id                String   @id @default(cuid())
+  companyId         String
+  userId            String
+  rating            Int
+  title             String
+  pros              String?
+  cons              String?
+  isCurrentEmployee Boolean?
+  designation       String?
+  isVerified        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  conversationId String
+  userId         String
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  attachmentUrl  String?
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model ReportedContent {
+  id         String  @id @default(cuid())
+  reporterId String
+  contentType String
+  contentId  String
+  reason     String
+  status     String
+
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  userId    String?
+  companyId String?
+  plan      SubscriptionPlan
+  startDate DateTime
+  endDate   DateTime
+  status    SubscriptionStatus @default(ACTIVE)
+  paymentId String?
+
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
