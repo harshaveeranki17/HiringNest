@@ -1,8 +1,8 @@
-# 🎉 JobSphere - Project Resolution Summary
+# 🎉 HiringNest - Project Resolution Summary
 
 ## ✅ All Errors Resolved!
 
-Your JobSphere project is now fully configured and running successfully!
+Your HiringNest project is now fully configured and running successfully!
 
 ### 🛠️ Issues Fixed
 
@@ -185,7 +185,7 @@ npx tsc --noEmit        # Check TypeScript
 
 ```
 Admin:
-  Email: admin@jobsphere.com
+  Email: admin@hiringnest.com
   Password: admin123
 
 Employer:
@@ -250,7 +250,7 @@ Job Seeker:
 
 ## 🎊 Success!
 
-Your JobSphere project is:
+Your HiringNest project is:
 - ✅ Fully configured
 - ✅ Error-free
 - ✅ Running smoothly

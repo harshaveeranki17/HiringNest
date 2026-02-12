@@ -1,6 +1,6 @@
-# 🚀 JobSphere — Full-Stack Job Portal Platform
+# 🚀 HiringNest — Full-Stack Job Portal Platform
 
-[![GitHub](https://img.shields.io/badge/GitHub-harshaveeranki17%2FJobSphere-blue?logo=github)](https://github.com/harshaveeranki17/JobSphere)
+[![GitHub](https://img.shields.io/badge/GitHub-harshaveeranki17%2FHiringNest-blue?logo=github)](https://github.com/harshaveeranki17/HiringNest)
 ![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwind-css)
@@ -9,7 +9,7 @@
 
 A modern, full-stack job portal platform that connects job seekers with employers. Built with Next.js 16, TypeScript, Tailwind CSS, PostgreSQL, and NextAuth.js.
 
-🔗 **Live Repository**: [github.com/harshaveeranki17/JobSphere](https://github.com/harshaveeranki17/JobSphere)
+🔗 **Live Repository**: [github.com/harshaveeranki17/HiringNest](https://github.com/harshaveeranki17/HiringNest)
 
 ## ✨ Features
 

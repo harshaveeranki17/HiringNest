@@ -1,4 +1,4 @@
-# JobSphere Setup Guide
+# HiringNest Setup Guide
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ docker compose up -d
 This will start a PostgreSQL database on `localhost:5432` with:
 - Username: `postgres`
 - Password: `postgres`  
-- Database: `jobsphere`
+- Database: `hiringnest`
 
 ### 3. Set up Environment Variables
 

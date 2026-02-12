@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { HiringNestLogo } from '@/components/HiringNestLogo'
 
 export default function Home() {
   const router = useRouter()
@@ -13,8 +14,8 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 justify-between items-center">
             <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-blue-600">
-                JobSphere
+              <Link href="/" className="flex items-center gap-2">
+                <HiringNestLogo size="sm" showText={true} />
               </Link>
             </div>
             <div className="flex items-center gap-4">
@@ -43,7 +44,7 @@ export default function Home() {
               Find Your Dream Job
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              JobSphere connects you with top employers across India. Search thousands of jobs, apply with ease, and track your applications in one place.
+              HiringNest connects you with top employers across India. Search thousands of jobs, apply with ease, and track your applications in one place.
             </p>
             
             {/* Search Bar */}
@@ -94,7 +95,7 @@ export default function Home() {
               Ready to find your next opportunity?
             </h2>
             <p className="mt-4 text-lg text-blue-100">
-              Join thousands of job seekers and employers on JobSphere
+              Join thousands of job seekers and employers on HiringNest
             </p>
             <div className="mt-8 flex gap-4 justify-center">
               <button className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50">
@@ -145,7 +146,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-8 border-t border-gray-800 pt-8 text-center">
-            <p className="text-sm text-gray-400">&copy; 2026 JobSphere. All rights reserved.</p>
+            <p className="text-sm text-gray-400">&copy; 2026 HiringNest. All rights reserved.</p>
           </div>
         </div>
       </footer>

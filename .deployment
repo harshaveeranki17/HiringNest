@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "Starting deployment..."
+
+# Install dependencies
+echo "Installing dependencies..."
+npm install
+
+# Build the Next.js application
+echo "Building Next.js application..."
+npm run build
+
+# Run Prisma migrations
+echo "Running database migrations..."
+npx prisma db push --skip-generate
+
+echo "Deployment completed successfully!"

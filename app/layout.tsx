@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JobSphere - Find Your Dream Job",
+  title: "HiringNest - Find Your Dream Job",
   description: "Job portal connecting seekers with employers",
 };
 

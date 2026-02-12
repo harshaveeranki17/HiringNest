@@ -1,4 +1,4 @@
-# 🚀 JobSphere - Project Status & Testing Guide
+# 🚀 HiringNest - Project Status & Testing Guide
 
 ## ✅ Completed Setup
 
@@ -51,12 +51,12 @@ npx prisma db seed
 
 **Option 2: Local PostgreSQL**
 1. Install PostgreSQL from https://www.postgresql.org/download/
-2. Create database: `createdb jobsphere`
+2. Create database: `createdb hiringnest`
 3. Update `.env.local` if needed
 4. Run: `npx prisma db push`
 
 ### Demo Users (After seeding)
-- **Admin**: admin@jobsphere.com / admin123
+- **Admin**: admin@hiringnest.com / admin123
 - **Employer**: employer@techcorp.com / employer123
 - **Job Seeker**: seeker@example.com / seeker123
 

@@ -74,10 +74,10 @@ async function main() {
 
   // Admin
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@jobsphere.com' },
+    where: { email: 'admin@hiringnest.com' },
     update: {},
     create: {
-      email: 'admin@jobsphere.com',
+      email: 'admin@hiringnest.com',
       password: hashedPassword,
       role: 'ADMIN',
       emailVerified: new Date(),
@@ -218,7 +218,7 @@ async function main() {
   console.log('\nTest Accounts:')
   console.log('Job Seeker: seeker@example.com / password123')
   console.log('Employer: recruiter@techinnovations.com / password123')
-  console.log('Admin: admin@jobsphere.com / password123')
+  console.log('Admin: admin@hiringnest.com / password123')
 }
 
 main()
